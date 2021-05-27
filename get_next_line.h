@@ -11,5 +11,7 @@ char	*ft_strdup(char *s);
 int		ft_strlen(const char *s);
 char	*ft_substr(char *s, int len);
 char	*cut_linebuf(char *linebuf);
+int		check_eof(int k, char **linebuf, char *buf, char **line);
+int		make_line_and_linebuf(char **line, char **linebuf, char **buf, int k);
 
 #endif

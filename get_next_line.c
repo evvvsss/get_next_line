@@ -69,7 +69,7 @@ char	*cut_linebuf(char *linebuf)
 		i++;
 	if (linebuf[i] != '\n')
 		return (ft_strdup(""));
-	new_linebuf = malloc(sizeof(char) * (check_line(linebuf) + 1));
+	new_linebuf = malloc(sizeof(char) * (ft_strlen(linebuf) - check_line(linebuf) + 1));
 	if (!new_linebuf)
 		return (NULL);
 	i++;
@@ -109,39 +109,42 @@ int	get_next_line(int fd, char **line)
 			free(buf);
 			return (-1);
 		}
-		// if (k == 0 && ft_strlen(linebuf) == 0)
+		// if (k == 0 && (ft_strlen(linebuf) == 0 || !linebuf))
 		// {
-		// 	free(buf);
 		// 	free(linebuf);
+		// 	linebuf = NULL;
+		// 	free(buf);
 		// 	*line = ft_strdup("");
 		// 	return (0);
 		// }
-		if (k < BUFFER_SIZE && check_line(linebuf) == -1)
-			linebuf[ft_strlen(linebuf)] = '\n';
-		if (k == 0 && ft_strlen(linebuf) == 0)
-		{
-			free(linebuf);
-			*line = ft_strdup("");
+		if (check_eof(k, &linebuf, buf, &(*line)) == 0)
 			return (0);
-		}
 	}
-	free(buf);
-	buf = NULL;
-	*line = ft_substr(linebuf, check_line(linebuf));
-	if (!*line)
-	{
-		free(linebuf);
-		return (-1);
-	}
-	linebuf = cut_linebuf(linebuf);
-	if (!linebuf)
-		return (-1);
-	if (k == 0)
-	{
-		free(linebuf);
-		return (0);
-	}
-	return (1);
+	// if (k < BUFFER_SIZE && check_line(linebuf) == -1)
+	// 	linebuf[ft_strlen(linebuf)] = '\n';
+	// free(buf);
+	// buf = NULL;
+	// *line = ft_substr(linebuf, check_line(linebuf));
+	// if (!*line)
+	// {
+	// 	free(linebuf);
+	// 	linebuf = NULL;
+	// 	return (-1);
+	// }
+	// if (k != 0)
+	// 	linebuf = cut_linebuf(linebuf);
+	// if (!linebuf)
+	// 	return (-1);
+	// if (k == 0)
+	// {
+	// 	free(linebuf);
+	// 	linebuf = NULL;
+	// 	return (0);
+	// }
+	// return (1);
+	if (k < BUFFER_SIZE && check_line(linebuf) == -1)
+		linebuf[ft_strlen(linebuf)] = '\n';
+	return (make_line_and_linebuf(&(*line), &linebuf, &buf, k));
 }
 
 // int	main(void)
@@ -149,20 +152,20 @@ int	get_next_line(int fd, char **line)
 // 	int		fd;
 // 	char	*line;
 
-// 	fd = open("gnlTester/files/41_no_nl", O_RDONLY);
-// 	while (get_next_line(fd, &line))
-// 	{
-// 		printf("%s\n", line);
-// 		free(line);
-// 	}
+// 	fd = open("1.txt", O_RDONLY);
+// 	// while (get_next_line(fd, &line))
+// 	// {
+// 	// 	printf("%s\n", line);
+// 	// 	free(line);
+// 	// }
+// 	// printf("%s\n", line);
+// 	// free(line);
+// 	printf("%d\n", get_next_line(fd, &line));
 // 	printf("%s\n", line);
 // 	free(line);
-// 	// get_next_line(fd, &line);
-// 	// printf("%s\n", line);
-// 	// free(line);
-// 	// get_next_line(fd, &line);
-// 	// printf("%s\n", line);
-// 	// free(line);
+// 	printf("%d\n", get_next_line(fd, &line));
+// 	printf("%s\n", line);
+// 	free(line);
 // 	// get_next_line(fd, &line);
 // 	// printf("%s", line);
 // 	// free(line);
